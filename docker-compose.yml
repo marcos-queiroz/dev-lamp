@@ -1,0 +1,48 @@
+version: "3"
+services:
+  # container do banco de dados
+  db:
+    image: mysql
+    container_name: lamp-mysql
+    command: --default-authentication-plugin=mysql_native_password
+    volumes:
+      - "./db_data:/var/lib/mysql"
+    restart: always
+    environment:
+      - MYSQL_ROOT_PASSWORD=sua_senha
+
+  # container do servidor web
+  apache:
+    image: php:7.2-apache
+    container_name: lamp-apache
+    build:
+      context: ./dockerfiles
+      dockerfile: php.dockerfile
+    restart: always
+    ports:
+      - 80:80
+    volumes:
+      - ./www/html:/var/www/html
+      - ./apache2/sites-available/:/etc/apache2/sites-available/
+    depends_on:
+      - db
+    links:
+      - db
+
+  # container do phpmyadmin
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    container_name: lamp-phpmyadmin
+    volumes:
+      - ./uploads.ini:/usr/local/etc/php/conf.d/php-phpmyadmin.ini
+    restart: always
+    ports:
+      - "8080:80"
+    environment:
+      MYSQL_USER: root
+      MYSQL_PASSWORD: sua_senha
+      MYSQL_ROOT_PASSWORD: sua_senha
+      PMA_USER: root
+      PMA_PASSWORD: sua_senha
+    links:
+      - db
