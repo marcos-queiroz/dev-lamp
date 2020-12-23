@@ -31,7 +31,9 @@ Para editar o arquivo 'hosts' sera necessário permissões de administrador e a 
 Após adicionar as entradas no Virtual Host, basta acessar as URLs.
 
 http://dev.one.localhost/
+
 http://dev.two.localhost/
+
 http://dev.three.localhost/
 
 ### PHP MyAdmin
